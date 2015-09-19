@@ -1,0 +1,28 @@
+--- 
+- name: install runit (OpenBSD)
+  sudo: yes
+  when: ansible_os_family == "OpenBSD"
+  openbsd_pkg: name=runit state=present
+  register: has_runit
+
+- name: install runit (Debian)
+  sudo: yes
+  when: ansible_os_family == "Debian"
+  apt: name=runit state=present
+  register: has_runit
+
+# user starts it from cron @reboot
+- name: disable runit service
+  sudo: yes
+  when: ansible_os_family == "Debian"
+  lineinfile:
+    dest: /etc/inittab
+    regexp: runsvdir-start
+    state: absent
+
+- name: install runit (OSX)
+  when: ansible_distribution == "MacOSX"
+  homebrew:
+    name: runit
+    state: present
+  register: has_runit

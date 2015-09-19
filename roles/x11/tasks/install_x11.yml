@@ -1,0 +1,63 @@
+---
+- name: install x11 packages
+  sudo: yes
+  when: ansible_os_family == "OpenBSD"
+  openbsd_pkg: name="{{item}}" state=latest
+  with_items:
+    - dmenu
+    - spectrwm
+    - xosd
+    - terminus-font
+    - droid-fonts
+    - rxvt-unicode
+
+- name: install x11
+  when: ansible_os_family == "Debian"
+  sudo: yes
+  apt: name="xorg" state=latest
+
+- name: add contrib and non-free
+  sudo: yes
+  apt_repository:
+    state: present
+    repo: 'deb http://http.debian.net/debian/ jessie main contrib non-free'
+
+- name: install radeon drivers (Radeon 6450)
+  when: ansible_os_family == "Debian"
+  when: gpu is defined and gpu == "radeon6450"
+  sudo: yes
+  apt: name="{{item}}" state=latest
+  with_items:
+    - firmware-linux-nonfree 
+    - libgl1-mesa-dri
+    - xserver-xorg-video-ati
+    - xserver-xorg-video-ati
+
+- name: set up xorg.conf.d directory
+  when: ansible_os_family == "Debian"
+  sudo: yes
+  file: dest="/etc/X11/xorg.conf.d/" state="directory"
+
+- name: create GPU driver section
+  sudo: yes
+  when: gpu is defined and gpu == "radeon6450"
+  copy:
+    src: 20-radeon.conf
+    dest: /etc/X11/xorg.conf.d/20-radeon.conf
+
+- name: install x11 packages packages
+  sudo: yes
+  when: ansible_os_family == "Debian"
+  apt: name="{{item}}" state=latest
+  with_items:
+    - dmenu
+    - fonts-droid
+    - gnuplot
+    - libxosd-dev
+    - rxvt-unicode
+    - spectrwm
+    - xclip
+    - xfonts-terminus
+    - xosd-bin
+    - xsel
+    - xvkbd

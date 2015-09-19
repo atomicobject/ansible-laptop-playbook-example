@@ -1,0 +1,22 @@
+---
+
+- name: install input device config stuff
+  sudo: yes
+  when: ansible_os_family == "Debian"
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - xinput
+    - xclip
+
+- name: reverse scroll direction for trackpad
+  sudo: yes
+  when: ansible_os_family == "Debian" and is_macbook is defined
+  copy:
+    src: 60-synaptics.conf
+    dest: /etc/X11/xorg.conf.d/
+    owner: root
+    mode: 644
+    backup: yes
+

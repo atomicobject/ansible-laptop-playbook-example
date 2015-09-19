@@ -1,0 +1,19 @@
+---
+
+- name: set up user groups
+  sudo: yes
+  user:
+    append: yes
+    groups: adm
+    name: '{{ansible_user_id}}'
+  when: ansible_os_family == "Debian"
+
+- name: install a better shell
+  sudo: yes
+  apt: name=mksh state=present
+
+- name: change shell to mksh
+  sudo: yes
+  user:
+    name: '{{ansible_user_id}}'
+    shell: /bin/mksh

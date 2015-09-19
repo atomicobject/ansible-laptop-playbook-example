@@ -1,0 +1,10 @@
+---
+
+- name: install runit service directory
+  file: path="~/sv" state="directory"
+
+- name: install cron reboot trigger directory
+  file: path="~/bin/cron/reboot.d/" state="directory"
+
+- name: restart runit runsv on reboot
+  copy: src="try_spawn_runsv" mode="0744" dest="~/bin/cron/reboot.d/try_spawn_runsv"

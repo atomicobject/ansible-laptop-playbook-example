@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# bootstrap debian on a LOCAL host
+LOCAL_USER=${USER}
+
+echo "Installing sudo & ansible, and adding local user with su..."
+su -c 'apt-get install sudo ansible && usermod -a -G sudo ${LOCAL_USER}'
+
+echo "Note: you will need to log back in for the group change to take effect."

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+    echo Usage: exec_dir DIR
+else
+    DIR="$1"
+    if [ -e ${DIR} ]; then
+        TASKS=$(ls -1 ${DIR})
+        
+        if [ -n "${TASKS}" ]; then
+            for task in ${TASKS}; do
+                ${DIR}/${task}
+            done
+        fi
+    fi
+fi

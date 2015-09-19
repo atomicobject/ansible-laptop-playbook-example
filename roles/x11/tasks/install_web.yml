@@ -1,0 +1,17 @@
+---
+- name: install web stuff
+  sudo: yes
+  when: ansible_os_family == "OpenBSD"
+  openbsd_pkg: name="{{item}}" state=latest
+  with_items:
+    - chromium
+    - surfraw
+
+- name: install web stuff
+  sudo: yes
+  when: ansible_os_family == "Debian"
+  apt: name="{{item}}" state=latest
+  with_items:
+    - chromium
+    - iceweasel #yeah, whatever
+    - surfraw

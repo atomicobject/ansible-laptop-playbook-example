@@ -1,0 +1,6 @@
+---
+- name: install x11 stuff
+  include: install_x11.yml
+
+- name: install web
+  include: install_web.yml

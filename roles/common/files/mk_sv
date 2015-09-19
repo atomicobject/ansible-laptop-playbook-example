@@ -1,0 +1,51 @@
+#!/bin/sh
+set -e
+
+# base path to user service directory
+if [ "root" = $(whoami) ]; then
+    SV_BASE="/sv"
+else
+    SV_BASE="${HOME}/sv"
+fi
+
+# name of current service
+SV=$1
+SV_PATH="${SV_BASE}/${SV}"
+
+if [ -z $1 ]; then
+    echo Usage: mk_sv service-name
+elif [ ! -e "${SV_PATH}" ]; then     # make idempotent
+    mkdir ${SV_PATH}
+
+    # don't auto-run it until manual config is done
+    touch ${SV_PATH}/down
+
+    # add executable stub run script
+    cat <<EOF > ${SV_PATH}/run
+#!/bin/sh
+# bump counter if odo is installed
+if [ -x /usr/local/bin/odo ]; then
+    odo ../counter
+fi
+
+# exec foo
+EOF
+    chmod u+x ${SV_PATH}/run 
+
+    # add executable stub logging script
+    mkdir ${SV_PATH}/log
+    cat <<EOF > ${SV_PATH}/log/run 
+#!/bin/sh
+set -e
+LOG="stdout"
+test -d "\${LOG}" || mkdir -p -m0750 "\${LOG}"
+exec svlogd -tt "\${LOG}"
+EOF
+    chmod u+x ${SV_PATH}/log/run
+
+    # configure log to rotate through gzip
+    mkdir ${SV_PATH}/log/stdout
+    cat <<EOF > ${SV_PATH}/log/stdout/config
+!gzip
+EOF
+fi

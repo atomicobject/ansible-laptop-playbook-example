@@ -1,0 +1,29 @@
+---
+# FIXME: necessary?
+# - name: ensure tilde bin exists
+#   file: path="~/bin/" state="directory"
+
+- name: add cron hooks directory for user
+  file: path="~/bin/cron/" state="directory"
+
+- name: copy exec_dir script (user)
+  copy: src="exec_dir" mode="0744" dest="~/bin/exec_dir"
+
+- name: configure parametric cron directories for user
+  cron:
+    name: "exec {{item}} dir"
+    special_time: "{{item}}"
+    job: "~/bin/exec_dir ~/bin/cron/{{item}}.d"
+  with_items:
+      - reboot
+      - yearly
+      - monthly
+      - weekly
+      - daily
+      - hourly
+
+- name: configure minutely (which has no special_time abbrev)
+  cron:
+    name: "exec minutely"
+    minute: "0-59"
+    job: "~/bin/exec_dir ~/bin/cron/minutely.d"

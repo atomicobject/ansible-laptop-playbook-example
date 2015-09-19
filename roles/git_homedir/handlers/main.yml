@@ -1,0 +1,8 @@
+---
+# rsync the git homedir repo to ~
+- name: install homedir
+  synchronize:
+    src: ~/dev/homedir/
+    dest: '{{ansible_env.HOME}}'
+    recursive: yes
+  delegate_to: '{{ansible_hostname}}'

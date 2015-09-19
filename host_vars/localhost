@@ -1,0 +1,5 @@
+---
+
+has_root: true
+install_git_homedir: true
+

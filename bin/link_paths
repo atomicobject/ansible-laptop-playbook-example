@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Set the hosts file (inventory) and group and host vars directories
+# to point into the VC'd repo.
+
+ANSIBLE_BASE=$1
+PWD=$(pwd)
+
+if [ -z ${ANSIBLE_BASE} ]; then
+    echo Usage: link_paths ANSIBLE_BASE
+    echo e.g. link_paths /etc/ansible or /usr/local/etc/ansible
+    echo "ansible-playbook's default location for 'hosts' is:"
+    ansible-playbook --help | grep -A1 -- "--inventory-file=INVENTORY"
+else
+    # make ansible dir if it doesn't exist
+    if [ ! -d ${ANSIBLE_BASE} ]; then
+        echo Making directory ${ANSIBLE_BASE} using sudo
+        sudo mkdir ${ANSIBLE_BASE}
+    fi
+
+    echo Creating symlinks within ${ANSIBLE_BASE} using sudo
+    sudo ln -s ${PWD}/hosts ${ANSIBLE_BASE}/hosts
+    sudo ln -s ${PWD}/group_vars/ ${ANSIBLE_BASE}/group_vars
+    sudo ln -s ${PWD}/host_vars/ ${ANSIBLE_BASE}/host_vars
+fi

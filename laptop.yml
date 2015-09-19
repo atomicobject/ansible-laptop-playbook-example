@@ -1,0 +1,13 @@
+---
+
+- hosts: localhost
+  connection: local
+  roles:
+    - common
+    - { role: debian, when: ansible_os_family == "Debian" }
+    - { role: osx, when: ansible_distribution == "MacOSX" }
+    - laptop
+    - { role: git_homedir, when: install_git_homedir is defined }
+    - { role: x11, when: ansible_distribution != "MacOSX" }
+
+    # other roles go here...

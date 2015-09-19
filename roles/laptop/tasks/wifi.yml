@@ -1,0 +1,18 @@
+---
+
+# If installing Debian on a MacBook Pro, get the firmware for the wifi chip
+- name: install broadcom43 firmware
+  sudo: yes
+  when: ansible_os_family == "Debian" and wifi_firmware == "b43"
+  apt: name=firmware-b43-installer state=latest
+
+- name: install wifi stuff
+  sudo: yes
+  when: ansible_os_family == "Debian"
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - wpasupplicant
+    - wicd
+

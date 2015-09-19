@@ -1,0 +1,32 @@
+#!/bin/sh
+
+PUB_KEY_PATH="${HOME}/.ssh/id_rsa.pub"
+
+PLAYBOOK_BASE_PATH="$1"
+YML_PATH="${PLAYBOOK_BASE_PATH}/roles/common/tasks/install_ssh_keys.yml"
+
+if [ -e "${YML_PATH}" ]; then
+    if [ -e ${PUB_KEY_PATH} ]; then
+        echo SSH key ${PUB_KEY_PATH} already exists, skipping key creation.
+    else
+        echo Running ssh-keygen with the defaults...
+        ssh-keygen
+    fi
+    
+    # TODO: make idempotent
+    echo Adding public key to Ansible playbook
+    cat ${PUB_KEY_PATH} | awk '
+{
+    "hostname" | getline hostname
+    printf("- name: install SSH key (%s)\n", hostname)
+    printf("  sudo: no\n")
+    printf("  authorized_key:\n")
+    printf("    key: \"%s\"\n", $0)
+    printf("    user: \"{{ansible_user_id}}\"\n")
+    printf("    state: present\n")
+    printf("\n")
+}
+' >> ${YML_PATH}
+else
+    echo "Usage: setup_ssh_key PLAYBOOK_BASE_PATH (may be .)"
+fi

@@ -1,0 +1,15 @@
+---
+
+- name: ensure ~/dev/ exists
+  file: path="~/dev" state="directory"
+
+- name: clone homedir git repo in ~
+  git:
+    repo: 'ssh://{{private_vc_host}}/{{private_vc_path}}/homedir'
+    dest: ~/dev/homedir/
+    update: no
+    accept_hostkey: true
+  # run handler even if subsequent tasks fail out
+  #force_handlers: true
+  notify:
+    - install homedir

@@ -1,0 +1,49 @@
+---
+
+- name: install essentials (OpenBSD)
+  sudo: yes
+  when: ansible_os_family == "OpenBSD"
+  openbsd_pkg: name="{{item}}" state=present
+  with_items:
+    - ansible
+    - bzip2
+    - cowsay
+    - figlet
+    - git
+    - unrar
+    - unzip
+    - w3m-0.5.3p3
+    - zip
+
+- name: install essentials (Debian)
+  sudo: yes
+  when: ansible_os_family == "Debian"
+  apt: name="{{item}}" state=present
+  with_items:
+    - ansible
+    - bzip2
+    - cowsay
+    - figlet
+    - git
+    - make
+    - sqlite3
+    - tmux
+    - unzip
+    - w3m
+    - zip
+
+- name: install essentials (OSX)    
+  when: ansible_distribution == "MacOSX"
+  homebrew:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - ansible
+    - cowsay
+    - figlet
+    - fuzzy-find
+    - git
+    - pwgen
+    - sqlite
+    - tmux
+    - w3m

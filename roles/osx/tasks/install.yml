@@ -1,0 +1,56 @@
+---
+
+- name: install stuff not covered by other roles
+  homebrew:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - ansible
+    - cowsay
+    - figlet
+    - fuzzy-find
+    - git
+    - ncdu
+    - pwgen
+    - tmux
+    - w3m
+
+- name: install homebrew cask
+  homebrew:
+    name: caskroom/cask/brew-cask
+    state: present
+
+- name: install casks
+  homebrew_cask:
+    name: "{{item}}"
+    state: present
+  with_items:
+    # - android-file-transfer
+    # - appcode
+    - arduino
+    # - dropbox
+    - flux
+    - google-chrome
+    # - google-drive
+    - hammerspoon
+    - xquartz
+    - inkscape
+    - iterm2
+    # - moom
+    - mou
+    # - osxfuse
+    # - pharo
+    # - slack
+    # - spotify
+    - vlc
+
+- name: install programming fonts
+  homebrew_cask:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - font-inconsolata
+    - font-terminus
+    - font-droid-sans
+    - font-droid-sans-mono
+  ignore_errors: yes
