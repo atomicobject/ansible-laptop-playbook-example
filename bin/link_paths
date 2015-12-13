@@ -10,7 +10,7 @@ if [ -z ${ANSIBLE_BASE} ]; then
     echo Usage: link_paths ANSIBLE_BASE
     echo e.g. link_paths /etc/ansible or /usr/local/etc/ansible
     echo "ansible-playbook's default location for 'hosts' is:"
-    ansible-playbook --help | grep -A1 -- "--inventory-file=INVENTORY"
+    ansible-playbook --help | grep -A2 -- "--inventory-file=INVENTORY"
 else
     # make ansible dir if it doesn't exist
     if [ ! -d ${ANSIBLE_BASE} ]; then
